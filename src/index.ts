@@ -10,3 +10,4 @@ export * from './cha2ds2vasc';
 export * from './pdapt';
 export * from './score';
 export * from './news2';
+export * from './tapping';
