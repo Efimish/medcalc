@@ -26,7 +26,8 @@ export interface TappingValues extends BaseValues {
 
 export interface TappingCalculationResult extends CalculationResult {
     additionalValues: {
-        level: TappingLevel
+        level: TappingLevel,
+        sres: String
     }
 }
 
@@ -73,13 +74,14 @@ export class Tapping implements Calculator {
         const dots4 = values.dots4;
         const dots5 = values.dots5;
         const dots6 = values.dots6;
-        const value = 123;
+        const value = ((dots2-dots1) + (dots3-dots1) + (dots4-dots1) + (dots5-dots1) + (dots6-dots1)) / dots1 * 100;
+        const sres = value >= 0 ? "Сильная система" : "Слабая система"
         const risk = this.getRisk(dots1, dots2, dots3, dots4, dots5, dots6);
         return {
             value,
-            // value,
             additionalValues: {
-                level: risk.level
+                level: risk.level,
+                sres: sres
             },
             riskLevel: risk.riskLevel
         };
