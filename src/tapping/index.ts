@@ -21,7 +21,8 @@ export interface TappingValues extends BaseValues {
     Smooth = 1,
     Descending = 2,
     Intermediate = 3,
-    Concave = 4
+    Concave = 4,
+    Unknown = NaN,
 }
 
 export interface TappingCalculationResult extends CalculationResult {
@@ -29,6 +30,17 @@ export interface TappingCalculationResult extends CalculationResult {
         level: TappingLevel,
         sres: String
     }
+}
+
+function aredotsclose(dots: number[]) {
+    const average_amount = dots.reduce((a,b)=>a+b) / dots.length;
+    const variation = average_amount * 0.2;
+    for(let dot of dots) {
+        if (Math.abs(average_amount - dot) > variation) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**
@@ -43,28 +55,24 @@ export class Tapping implements Calculator {
     }
 
     private getRisk(dots1: number, dots2: number, dots3: number, dots4: number, dots5: number, dots6: number) {
+        const dots = [dots1, dots2, dots3, dots4, dots5, dots6]
         // Result interpretation
-        if (dots1 <= 10) {
-            // < 16
-            return { level: TappingLevel.Convex, riskLevel: RiskLevel.Critical };
+        if (aredotsclose(dots)) {
+            return { level: TappingLevel.Smooth, riskLevel: RiskLevel.Critical };
         }
-        if (dots1 <= 20) {
-            // 16-17
-            return { level: TappingLevel.Smooth, riskLevel: RiskLevel.High };
+        if ((dots[2] > dots[0] * 1.1 && dots[2] > dots[5] * 1.1) || (dots[3] > dots[0] * 1.1 && dots[3] > dots[5] * 1.1)) {
+            return { level: TappingLevel.Convex, riskLevel: RiskLevel.High };
         }
-        if (dots1 <= 30) {
-            // 17-18.5
+        if (dots[0] > dots[1] && aredotsclose(dots.slice(1))) {
             return { level: TappingLevel.Descending, riskLevel: RiskLevel.Moderate };
         }
-        if (dots1 <= 40) {
-            // 18.5-25
+        if ((dots[1] > dots[2] && aredotsclose(dots.slice(2))) || (dots[2] > dots[3] && aredotsclose(dots.slice(3)))) {
             return { level: TappingLevel.Intermediate, riskLevel: RiskLevel.Low };
-        }
-        if (dots1 <= 50) {
-            // 25-30
+        } // dm[2] < dm[0] * 1.1 and dm[2] < dm[5] * 1.1 and dm[3] < dm[0] * 1.1 and dm[3] < dm[5] * 1.1:
+        if (dots[2] < dots[0] * 1.1 && dots[2] < dots[5] * 1.1 && dots[3] < dots[0] * 1.1 && dots[3] < dots[5] * 1.1) {
             return { level: TappingLevel.Concave, riskLevel: RiskLevel.Moderate };
         }
-        return { level: TappingLevel.Smooth, riskLevel: RiskLevel.Critical };
+        return { level: TappingLevel.Unknown, riskLevel: RiskLevel.Critical };
     }
 
     calculate(values: TappingValues): TappingCalculationResult {
