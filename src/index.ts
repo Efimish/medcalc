@@ -11,3 +11,4 @@ export * from './pdapt';
 export * from './score';
 export * from './news2';
 export * from './tapping';
+export * from './fat';
