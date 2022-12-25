@@ -1,5 +1,4 @@
-import { Bmi, BmiLevel } from '.';
-import { RiskLevel } from '../interfaces';
+import { Tapping, TappingLevel } from '.';
 
 describe('Tapping', () => {
     test('test1', () => {
@@ -12,6 +11,19 @@ describe('Tapping', () => {
             dots5: 20,
             dots6: 20
         });
-        expect(result.value).toBe(123);
+        expect(result.additionalValues.level).toBe(TappingLevel.Smooth);
+    });
+
+    test('test2', () => {
+        const tapping = new Tapping();
+        const result = tapping.calculate({
+            dots1: 12,
+            dots2: 14,
+            dots3: 10,
+            dots4: 13,
+            dots5: 16,
+            dots6: 17
+        });
+        expect(result.additionalValues.level).toBe(TappingLevel.Concave);
     });
 });
