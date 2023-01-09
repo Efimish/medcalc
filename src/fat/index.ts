@@ -17,11 +17,13 @@ export interface FatLevelValues extends BaseValues {
  * WHO values for adults
  */
 export enum FatLevel {
-    Good = 0,
-    Bad = 1,
-    Error,
     TooLow,
+    Good,
     TooHigh,
+    ErrorAge,
+    ErrorTooLow,
+    ErrorTooHigh,
+    Error,
 }
 
 export interface FatLevelCalculationResult extends CalculationResult {
@@ -132,16 +134,17 @@ export class Fat implements Calculator {
         }
 
         if(ageFlag === -1) { // Error
+            level = FatLevel.ErrorAge
             return { percent: fat, level: level };
         }
 
         if(row === -1) { // Error, too less
-            level = FatLevel.TooLow;
+            level = FatLevel.ErrorTooLow;
             return { percent: fat, level: level };
         }
         
         else if(row === 100) { // Error, too high -_-
-            level = FatLevel.TooHigh;
+            level = FatLevel.ErrorTooHigh;
             return { percent: fat, level: level };
         }
 
@@ -150,17 +153,17 @@ export class Fat implements Calculator {
                 switch(ageFlag) {
                     case 0: {
                         fat = M16_29[row];
-                        level = (9 <= fat && fat <= 15) ? FatLevel.Good : FatLevel.Bad
+                        level = fat < 9 ? FatLevel.TooLow : fat > 15 ? FatLevel.TooHigh : FatLevel.Good
                         break;
                     }
                     case 1: {
                         fat = M30_49[row];
-                        level = (11 <= fat && fat <= 17) ? FatLevel.Good : FatLevel.Bad
+                        level = fat < 11 ? FatLevel.TooLow : fat > 17 ? FatLevel.TooHigh : FatLevel.Good
                         break;
                     }
                     case 2: {
                         fat = M50plus[row];
-                        level = (12 <= fat && fat <= 19) ? FatLevel.Good : FatLevel.Bad
+                        level = fat < 12 ? FatLevel.TooLow : fat > 19 ? FatLevel.TooHigh : FatLevel.Good
                         break;
                     }
                 }
@@ -169,17 +172,17 @@ export class Fat implements Calculator {
                 switch(ageFlag) {
                     case 0: {
                         fat = F16_29[row];
-                        level = (14 <= fat && fat <= 21) ? FatLevel.Good : FatLevel.Bad
+                        level = fat < 14 ? FatLevel.TooLow : fat > 21 ? FatLevel.TooHigh : FatLevel.Good
                         break;
                     }
                     case 1: {
                         fat = F30_49[row];
-                        level = (15 <= fat && fat <= 23) ? FatLevel.Good : FatLevel.Bad
+                        level = fat < 15 ? FatLevel.TooLow : fat > 23 ? FatLevel.TooHigh : FatLevel.Good
                         break;
                     }
                     case 2: {
                         fat = F50plus[row];
-                        level = (16 <= fat && fat <= 25) ? FatLevel.Good : FatLevel.Bad
+                        level = fat < 16 ? FatLevel.TooLow : fat > 25 ? FatLevel.TooHigh : FatLevel.Good
                         break;
                     }
                 }
