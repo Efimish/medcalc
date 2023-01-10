@@ -27,8 +27,7 @@ export enum TappingLevel {
 
 export interface TappingCalculationResult extends CalculationResult {
     additionalValues: {
-        level: TappingLevel,
-        sres: String
+        level: TappingLevel
     }
 }
 
@@ -82,14 +81,12 @@ export class Tapping implements Calculator {
         const dots4 = values.dots4;
         const dots5 = values.dots5;
         const dots6 = values.dots6;
-        const value = ((dots2 - dots1) + (dots3 - dots1) + (dots4 - dots1) + (dots5 - dots1) + (dots6 - dots1)) / dots1 * 100;
-        const sres = value >= 0 ? "Сильная система" : "Слабая система"
+        const value = Math.round(100 * (((dots2 - dots1) + (dots3 - dots1) + (dots4 - dots1) + (dots5 - dots1) + (dots6 - dots1)) / dots1 * 100)) / 100;
         const risk = this.getRisk(dots1, dots2, dots3, dots4, dots5, dots6);
         return {
-            value: 0,
+            value: value,
             additionalValues: {
-                level: risk.level,
-                sres: sres
+                level: risk.level
             },
             riskLevel: risk.riskLevel
         };

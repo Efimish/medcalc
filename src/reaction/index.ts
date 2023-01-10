@@ -49,8 +49,9 @@ export class Reaction implements Calculator {
         // const value = ((dots2 - dots1) + (dots3 - dots1) + (dots4 - dots1) + (dots5 - dots1) + (dots6 - dots1)) / dots1 * 100;
         // const sres = value >= 0 ? "Сильная система" : "Слабая система"
         const risk = this.getRisk(cm);
+        const ms = Math.round(100 * risk.ms) / 100;
         return {
-            value: risk.ms,
+            value: ms,
             additionalValues: {
                 level: risk.level
             }
