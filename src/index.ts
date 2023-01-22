@@ -13,3 +13,4 @@ export * from './news2';
 export * from './tapping';
 export * from './fat';
 export * from './reaction';
+export * from './pbm';
