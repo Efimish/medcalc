@@ -26,9 +26,8 @@ export class Pbm implements Calculator {
     }
 
     calculate(values: PbmValues): PbmCalculationResult {
-        const h = values.height / 100;
-        let value = 50 + 2.3 * (0.394 * h - 60);
-        if(values.gender == Gender.Female) { value -= 4.5}
+        let value = 50 + 2.3 * (0.394 * values.height - 60);
+        if(values.gender == Gender.Female) value -= 4.5
         return {
             value
         };
