@@ -26,7 +26,7 @@ export class Pbm implements Calculator {
     }
 
     calculate(values: PbmValues): PbmCalculationResult {
-        let value = 50 + 2.3 * (0.394 * values.height - 60);
+        let value = Math.round( 10 * (50 + 2.3 * (0.394 * values.height - 60)) ) / 10;
         if(values.gender == Gender.Female) value -= 4.5
         return {
             value
