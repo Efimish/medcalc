@@ -1,6 +1,6 @@
 {
   "name": "medcalc",
-  "version": "0.9.13",
+  "version": "0.9.14",
   "description": "medical calculators",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
